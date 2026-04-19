@@ -28,6 +28,13 @@ If the site is already running and you only want the cleaner header/footer refre
 4. Paste all SQL and click **Go**.
 5. Clear cache and hard refresh the frontend.
 
+## 2c) If you want to rebuild it the Kadence lecture-safe way
+If your teacher wants a clean Kadence-first structure with minimal custom CSS:
+1. Open file: `KADENCE-LECTURE-SAFE-RESET.md`.
+2. Follow the steps to remove the current Additional CSS overrides.
+3. Rebuild the header/footer using Kadence Builder only.
+4. Clean the menu structure before doing any extra styling.
+
 ## 3) WordPress checks (5 minutes)
 1. Open `Settings -> Permalinks` and click **Save Changes** once.
 2. Open homepage and check cards on desktop + mobile.
