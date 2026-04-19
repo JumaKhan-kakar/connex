@@ -33,7 +33,8 @@ If your teacher wants a clean Kadence-first structure with minimal custom CSS:
 1. Open file: `KADENCE-LECTURE-SAFE-RESET.md`.
 2. Follow the steps to remove the current Additional CSS overrides.
 3. Rebuild the header/footer using Kadence Builder only.
-4. Clean the menu structure before doing any extra styling.
+4. Follow the mobile-first checklist inside that guide for phone/tablet safety.
+5. Clean the menu structure before doing any extra styling.
 
 ## 3) WordPress checks (5 minutes)
 1. Open `Settings -> Permalinks` and click **Save Changes** once.

@@ -245,6 +245,134 @@ Click **Save Changes** once.
 
 ---
 
+## Part 8 - Mobile-first quality rules
+
+This is important because your teacher is right: a site should not work only on desktop.
+
+When rebuilding with Kadence, treat **mobile as a required layout**, not an afterthought.
+
+### Universal mobile rules to follow
+
+#### Header
+- Keep the logo small enough to fit naturally
+- Keep the site title short
+- Do not force long menu items into one row
+- Use a clean mobile menu/drawer instead of squeezing desktop navigation
+- Do not use hover-dependent behavior for mobile users
+
+#### Content area
+- Do not let text run too wide
+- Avoid large fixed widths
+- Avoid manual spacing with too many empty blocks
+- Keep buttons full-width or comfortably tappable on small screens
+- Use stacked cards on mobile, not 3-column desktop layouts
+
+#### Footer
+- Reduce footer columns on tablet/mobile
+- Keep links vertically readable
+- Avoid long lines of tiny text
+- Make footer headings clear and larger than the body text
+
+#### Accessibility and usability
+- Text should stay visible without hover
+- Links must look like links even before hover
+- Tap targets should not be too small
+- Menu items should be easy to tap with a thumb
+- Important buttons should have enough contrast
+
+---
+
+## Part 9 - Mobile settings inside Kadence
+
+### Header mobile setup
+Open:
+
+`Appearance -> Customize -> Header`
+
+Then switch to the **tablet/mobile preview icons** while editing.
+
+Recommended:
+- Desktop: logo + title + primary navigation
+- Tablet: logo + title + simplified nav or menu toggle
+- Mobile: logo + title + **menu toggle only**
+
+Do not try to keep the full desktop menu visible on mobile.
+
+### Mobile menu recommendations
+- Use Kadence mobile drawer
+- Keep the menu list simple
+- Avoid deep nesting
+- Avoid putting many pages under `Inicio`
+
+### Footer mobile setup
+Open:
+
+`Appearance -> Customize -> Footer`
+
+Recommended:
+- Desktop: 3 columns
+- Tablet: 2 or 3 depending on readability
+- Mobile: 1 column or stacked sections
+
+If any footer column looks crowded on mobile, stack it instead of shrinking the text.
+
+---
+
+## Part 10 - Mobile test checklist
+
+After every big change, test these screen sizes:
+
+- **360px width** (small Android)
+- **390px width** (modern phones)
+- **768px width** (tablet)
+- **1024px width** (small laptop/tablet landscape)
+
+Check these things on each:
+
+### Header checks
+- Is the site title visible?
+- Is the logo aligned well?
+- Does the menu wrap badly?
+- Can the mobile menu open and close cleanly?
+- Are dropdown items easy to tap?
+
+### Homepage checks
+- Do buttons fit inside the screen?
+- Do cards stack correctly?
+- Does any text overflow outside its box?
+- Is there too much empty space?
+- Are images proportionate?
+
+### Footer checks
+- Are headings visible?
+- Are links readable before hover?
+- Is anything cut off?
+- Are columns stacked cleanly?
+- Is the copyright line centered and readable?
+
+### Global checks
+- No horizontal scrolling
+- No hidden text
+- No hover-only information
+- No overlapping blocks
+- No giant empty gaps
+
+---
+
+## Part 11 - The safest mobile strategy for your first site
+
+If you want the site to stay stable in future:
+
+1. Build layout in Kadence first
+2. Check desktop, tablet, and mobile inside the Customizer
+3. Keep the menu simple
+4. Keep footer columns limited
+5. Only use very small CSS polish later
+
+For a first project, this is the safest universal method.
+
+---
+
 ## The easiest success path for your project
 
 If you want your teacher to see a clean Kadence build:
