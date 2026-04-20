@@ -1,6 +1,6 @@
 # Portal1 Scratch Rebuild Blueprint
 
-This is the recommended path if you want to rebuild the site cleanly from scratch in WordPress using Kadence Theme and Kadence Blocks.
+This is the recommended path if you want to rebuild the site cleanly on an existing WordPress install using Kadence Theme and Kadence Blocks.
 
 The goal is:
 - clean structure
@@ -15,19 +15,36 @@ The goal is:
 
 Use this order:
 
-1. Install WordPress cleanly
-2. Install Kadence Theme
-3. Install Kadence Blocks
+1. Keep the current Pantheon WordPress install
+2. Keep Kadence Theme and Kadence Blocks active
+3. Remove or replace the broken site details
 4. Set global colors and fonts
 5. Build header
 6. Build footer
 7. Build menu
-8. Create pages
+8. Create/clean pages
 9. Add page content
 10. Test desktop, tablet, mobile
 11. Add tiny polish only if necessary
 
 Do not start with custom CSS.
+
+---
+
+## 1a) Best use of the existing Pantheon site
+
+You do **not** need to reinstall:
+- WordPress
+- Kadence Theme
+- Kadence Blocks
+- core plugins you already want to keep
+
+The safer move is:
+- keep the current Pantheon install
+- remove the messy content/settings from the existing site
+- rebuild the visible site structure cleanly inside the same install
+
+This reduces risk and keeps the workflow easier for a beginner.
 
 ---
 

@@ -43,18 +43,19 @@ If your teacher wants a clean Kadence-first structure with minimal custom CSS:
 4. Follow the mobile-first checklist inside that guide for phone/tablet safety.
 5. Clean the menu structure before doing any extra styling.
 
-## 2d) Recommended long-term path: rebuild from scratch
-If you want the cleanest final website package instead of repairing the current install:
+## 2d) Recommended long-term path: rebuild in place on Pantheon
+If WordPress is already installed on Pantheon and Kadence is already active, the best long-term path is:
 1. Open file: `PORTAL1-SCRATCH-REBUILD-BLUEPRINT.md`.
 2. Use `PORTAL1-KADENCE-BUILD-GUIDE.md` as the build order inside WordPress.
 3. Use `PORTAL1-CONTENT-KIT.md` for clean page, menu, button, and footer copy.
-4. Build the whole site in Kadence first, then do only tiny polish afterward.
+4. Keep the existing WordPress + Kadence install, remove the broken site details, and rebuild the whole site in Kadence cleanly.
+5. Do only tiny polish afterward.
 
 ## 3) Which route should you choose?
 
 - Choose **2b Final standard refresh** if you want the fastest practical cleanup path.
 - Choose **2c Kadence lecture-safe reset** if you want the most teacher-friendly builder-first workflow on the existing site.
-- Choose **2d Scratch rebuild** if you want the cleanest long-term result and the highest chance of a polished final website.
+- Choose **2d Pantheon in-place rebuild** if you want the cleanest long-term result and the highest chance of a polished final website without reinstalling WordPress or Kadence.
 
 ## 4) WordPress checks (5 minutes)
 1. Open `Settings -> Permalinks` and click **Save Changes** once.

@@ -8,18 +8,40 @@ Use this after reading:
 
 ---
 
-## Phase 1 - Clean start
+## Phase 1 - Clean Pantheon start
 
-### 1) Install and activate
-- Kadence Theme
-- Kadence Blocks
-- Rank Math SEO
+This guide assumes:
+- your site is already running on Pantheon
+- WordPress is already installed
+- Kadence Theme is already installed
+- Kadence Blocks is already installed
+- Rank Math is already installed
 
-### 2) Avoid early mistakes
-Before building:
+So the goal is not to reinstall. The goal is to **remove the broken site details** and rebuild the structure cleanly on the same install.
+
+### 1) Before rebuilding
+Do this first:
+- export a backup from Pantheon or your database tool
+- save any current content/images you want to reuse
 - do not paste large Additional CSS
 - do not use Canvas templates for normal content pages
 - do not build the menu before the page list is finalized
+
+### 2) Keep these, reset these
+
+Keep:
+- WordPress install
+- Kadence Theme
+- Kadence Blocks
+- Rank Math
+
+Reset/rebuild:
+- Additional CSS
+- header builder
+- footer builder
+- menu structure
+- page templates
+- duplicated footer/widget content
 
 ---
 
