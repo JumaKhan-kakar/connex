@@ -20,13 +20,51 @@ INSERT INTO wp_postmeta (post_id, meta_key, meta_value) VALUES
 (174, '_wp_page_template', 'default'),
 (178, '_wp_page_template', 'default');
 
--- 2) Append a clean responsive header/footer theme refresh
-UPDATE wp_posts
-SET post_content = CONCAT(
-  post_content,
-  '
+-- 2) Flatten the unstable Inicio dropdown and shorten menu labels
+UPDATE wp_postmeta
+SET meta_value = '0'
+WHERE post_id IN (538,540)
+  AND meta_key = '_menu_item_menu_item_parent';
 
-/* BEGIN PORTAL1 HEADER FOOTER REFRESH */
+UPDATE wp_posts
+SET menu_order = CASE ID
+  WHEN 529 THEN 1
+  WHEN 530 THEN 2
+  WHEN 531 THEN 3
+  WHEN 532 THEN 4
+  WHEN 533 THEN 5
+  WHEN 540 THEN 6
+  WHEN 538 THEN 7
+  ELSE menu_order
+END,
+post_title = CASE ID
+  WHEN 529 THEN 'Inicio'
+  WHEN 530 THEN 'Talones'
+  WHEN 531 THEN 'Ayuda'
+  WHEN 532 THEN 'Estados'
+  WHEN 533 THEN 'FAQ'
+  WHEN 540 THEN 'Registro'
+  WHEN 538 THEN 'RFC y CURP'
+  ELSE post_title
+END,
+post_excerpt = CASE ID
+  WHEN 529 THEN 'Inicio'
+  WHEN 530 THEN 'Talones'
+  WHEN 531 THEN 'Ayuda'
+  WHEN 532 THEN 'Estados'
+  WHEN 533 THEN 'FAQ'
+  WHEN 540 THEN 'Registro'
+  WHEN 538 THEN 'RFC y CURP'
+  ELSE post_excerpt
+END,
+post_modified = NOW(),
+post_modified_gmt = UTC_TIMESTAMP()
+WHERE ID IN (529,530,531,532,533,538,540)
+  AND post_type = 'nav_menu_item';
+
+-- 3) Replace stacked Additional CSS with one clean baseline
+UPDATE wp_posts
+SET post_content = '/* BEGIN PORTAL1 FINAL STANDARD CSS */
 :root {
   --portal1-navy: #1a3b5d;
   --portal1-navy-deep: #132c47;
@@ -36,8 +74,131 @@ SET post_content = CONCAT(
   --portal1-ink: #10304d;
   --portal1-surface: rgba(255,255,255,0.08);
   --portal1-border: rgba(255,255,255,0.16);
+  --portal1-shadow: 0 12px 28px rgba(15,44,71,0.12);
+  --portal1-shadow-strong: 0 18px 36px rgba(15,44,71,0.18);
   --portal1-mex-green: #006847;
   --portal1-mex-red: #ce1126;
+}
+
+body,
+input,
+select,
+textarea {
+  color: var(--portal1-ink);
+  line-height: 1.6;
+}
+
+.home .entry-content,
+.page .entry-content,
+.single-content {
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(16px, 2vw, 24px);
+  padding-right: clamp(16px, 2vw, 24px);
+}
+
+.entry-content,
+.single-content,
+.entry-content p,
+.single-content p,
+.entry-content li,
+.single-content li,
+.entry-content h1,
+.entry-content h2,
+.entry-content h3,
+.entry-content h4,
+.single-content h1,
+.single-content h2,
+.single-content h3,
+.single-content h4 {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.entry-content a:not(.wp-block-button__link),
+.single-content a:not(.wp-block-button__link) {
+  color: var(--portal1-navy) !important;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  transition: color 0.2s ease;
+}
+
+.entry-content a:not(.wp-block-button__link):hover,
+.entry-content a:not(.wp-block-button__link):focus,
+.single-content a:not(.wp-block-button__link):hover,
+.single-content a:not(.wp-block-button__link):focus {
+  color: var(--portal1-gold) !important;
+}
+
+.fone-quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 18px 0 28px;
+}
+
+.fone-btn {
+  display: inline-block;
+  background: var(--portal1-gold);
+  color: var(--portal1-ink) !important;
+  text-decoration: none !important;
+  font-weight: 700;
+  padding: 12px 18px;
+  border-radius: 12px;
+  box-shadow: var(--portal1-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.fone-btn:hover,
+.fone-btn:focus {
+  color: var(--portal1-ink) !important;
+  filter: brightness(0.98);
+  transform: translateY(-1px);
+  box-shadow: var(--portal1-shadow-strong);
+}
+
+.fone-btn-outline {
+  background: #ffffff;
+  border: 2px solid var(--portal1-gold);
+}
+
+.fone-home-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin: 18px 0 28px;
+}
+
+.fone-card {
+  border: 1px solid #d7dfeb;
+  border-radius: 16px;
+  background: #ffffff;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  box-shadow: var(--portal1-shadow);
+}
+
+.fone-icon {
+  font-size: 30px;
+  line-height: 1;
+  text-align: center;
+}
+
+.fone-card h3,
+.fone-card p {
+  margin: 0;
+  text-align: center;
+}
+
+.fone-card a {
+  margin-top: auto;
+  text-align: center;
+  font-weight: 600;
 }
 
 #masthead,
@@ -63,15 +224,6 @@ SET post_content = CONCAT(
   top: 0;
 }
 
-#main-header {
-  display: block !important;
-  background: transparent !important;
-}
-
-#mobile-header {
-  display: none !important;
-}
-
 #masthead,
 #masthead .site-main-header-wrap .site-header-row-container-inner,
 #masthead .site-header-upper-inner-wrap,
@@ -80,13 +232,13 @@ SET post_content = CONCAT(
 }
 
 #masthead .site-main-header-wrap .site-header-row-container-inner > .site-container {
-  padding: 16px 22px !important;
+  padding: 14px 20px !important;
 }
 
 #masthead .site-main-header-inner-wrap.site-header-row-center-column {
   grid-template-columns: auto minmax(0, 1fr) auto !important;
   align-items: center;
-  column-gap: 26px;
+  column-gap: 22px;
 }
 
 #masthead .site-header-main-section-center,
@@ -104,12 +256,12 @@ SET post_content = CONCAT(
 }
 
 .site-branding a.brand {
-  gap: 14px !important;
+  gap: 12px !important;
   align-items: center !important;
 }
 
 .site-branding a.brand img {
-  max-width: 132px !important;
+  max-width: 112px !important;
   width: auto !important;
   height: auto !important;
   background: rgba(255,255,255,0.96);
@@ -126,7 +278,7 @@ SET post_content = CONCAT(
 
 .site-branding .site-title {
   margin: 0 !important;
-  font-size: clamp(1.55rem, 1.25rem + 1vw, 2rem) !important;
+  font-size: clamp(1.35rem, 1.08rem + 0.75vw, 1.75rem) !important;
   font-weight: 700 !important;
   line-height: 1.1 !important;
   white-space: nowrap;
@@ -138,47 +290,20 @@ SET post_content = CONCAT(
   gap: 2px;
 }
 
-#masthead .header-navigation-layout-stretch-true.header-navigation-layout-fill-stretch-true .header-navigation .header-menu-container .menu,
 #masthead .primary-menu-container > ul.menu {
   display: flex !important;
   justify-content: flex-end !important;
   align-items: center !important;
-  gap: 10px !important;
+  gap: 8px !important;
   flex-wrap: wrap !important;
-  grid-template-columns: none !important;
-}
-
-#masthead .primary-menu-container > ul.menu > li,
-#masthead .header-navigation-layout-stretch-true.header-navigation-layout-fill-stretch-true .header-navigation .header-menu-container .menu > li {
-  flex: 0 0 auto !important;
-  display: block !important;
-  text-align: left !important;
+  list-style: none !important;
   margin: 0 !important;
+  padding: 0 !important;
 }
 
-#masthead .main-navigation ul.sub-menu,
-#masthead .main-navigation ul.submenu {
-  display: none !important;
-  flex-direction: column !important;
-  position: absolute !important;
-  top: calc(100% + 10px) !important;
-  left: 0 !important;
-  min-width: 230px !important;
-  padding: 10px !important;
-  border-radius: 14px !important;
-  background: var(--portal1-navy-deep) !important;
-  border: 1px solid rgba(255,255,255,0.12) !important;
-  box-shadow: 0 18px 34px rgba(0,0,0,0.22) !important;
-  z-index: 999 !important;
-}
-
-#masthead .main-navigation li:hover > ul.sub-menu,
-#masthead .main-navigation li:hover > ul.submenu,
-#masthead .main-navigation li:focus-within > ul.sub-menu,
-#masthead .main-navigation li:focus-within > ul.submenu,
-#masthead .main-navigation li.menu-item--toggled-on > ul.sub-menu,
-#masthead .main-navigation li.menu-item--toggled-on > ul.submenu {
-  display: block !important;
+#masthead .primary-menu-container > ul.menu > li {
+  position: relative;
+  margin: 0 !important;
 }
 
 #masthead .main-navigation .menu-item > a {
@@ -186,11 +311,12 @@ SET post_content = CONCAT(
   background: transparent !important;
   text-decoration: none !important;
   font-weight: 600 !important;
-  font-size: 0.96rem !important;
+  font-size: 0.9rem !important;
   line-height: 1.2 !important;
   letter-spacing: 0.01em;
-  padding: 11px 14px !important;
+  padding: 10px 12px !important;
   border-radius: 999px !important;
+  white-space: nowrap;
   transition: color 0.2s ease, background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease !important;
 }
 
@@ -207,8 +333,20 @@ SET post_content = CONCAT(
 #masthead .main-navigation .menu-item.current_page_item > a {
   background: var(--portal1-gold) !important;
   color: var(--portal1-ink) !important;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+  box-shadow: var(--portal1-shadow);
   transform: translateY(-1px);
+}
+
+#masthead .main-navigation ul.sub-menu,
+#masthead .main-navigation ul.submenu {
+  top: 100% !important;
+  left: 0 !important;
+  min-width: 220px !important;
+  padding: 8px !important;
+  background: var(--portal1-navy-deep) !important;
+  border: 1px solid var(--portal1-border) !important;
+  border-radius: 14px !important;
+  box-shadow: var(--portal1-shadow-strong) !important;
 }
 
 #masthead .main-navigation ul.sub-menu a,
@@ -217,13 +355,14 @@ SET post_content = CONCAT(
   color: var(--portal1-white) !important;
   background: transparent !important;
   border-radius: 10px !important;
-  padding: 11px 12px !important;
-  font-size: 0.92rem !important;
+  padding: 10px 12px !important;
+  font-size: 0.9rem !important;
+  white-space: normal !important;
 }
 
 #masthead .main-navigation ul.sub-menu a:hover,
 #masthead .main-navigation ul.submenu a:hover {
-  background: rgba(244,185,66,0.16) !important;
+  background: rgba(244,185,66,0.14) !important;
   color: var(--portal1-gold-soft) !important;
 }
 
@@ -238,17 +377,17 @@ SET post_content = CONCAT(
 }
 
 #colophon .site-top-footer-inner-wrap {
-  padding-top: 34px !important;
-  padding-bottom: 28px !important;
-  gap: 22px !important;
+  padding-top: 30px !important;
+  padding-bottom: 24px !important;
+  gap: 18px !important;
 }
 
 #colophon .site-top-footer-inner-wrap .site-footer-section {
   background: var(--portal1-surface) !important;
   border: 1px solid var(--portal1-border) !important;
-  border-radius: 18px !important;
-  padding: 20px 18px !important;
-  box-shadow: 0 12px 28px rgba(0,0,0,0.14);
+  border-radius: 16px !important;
+  padding: 18px 16px !important;
+  box-shadow: var(--portal1-shadow);
 }
 
 #colophon .site-top-footer-inner-wrap .site-footer-section:not(:last-child)::after {
@@ -259,19 +398,15 @@ SET post_content = CONCAT(
 #colophon .site-info-inner {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   height: 100%;
-}
-
-#colophon .footer-widget-area-inner > section.widget_block:last-child {
-  order: -1;
 }
 
 #colophon .wp-block-heading,
 #colophon .widget-title {
-  margin: 0 !important;
+  margin: 0 0 0.25rem !important;
   color: var(--portal1-gold) !important;
-  font-size: 1.05rem !important;
+  font-size: 1.02rem !important;
   line-height: 1.3 !important;
 }
 
@@ -305,8 +440,8 @@ SET post_content = CONCAT(
 }
 
 #colophon .site-bottom-footer-inner-wrap {
-  padding-top: 18px !important;
-  padding-bottom: 22px !important;
+  padding-top: 16px !important;
+  padding-bottom: 20px !important;
 }
 
 #colophon .footer-html-inner p {
@@ -314,10 +449,25 @@ SET post_content = CONCAT(
   text-align: center;
 }
 
+@media (max-width: 1200px) {
+  #masthead .site-main-header-inner-wrap.site-header-row-center-column {
+    column-gap: 16px;
+  }
+
+  #masthead .main-navigation .menu-item > a {
+    padding: 9px 11px !important;
+    font-size: 0.88rem !important;
+  }
+
+  .site-branding .site-title {
+    font-size: 1.3rem !important;
+  }
+}
+
 @media (max-width: 1024px) {
   #masthead .site-main-header-inner-wrap.site-header-row-center-column {
     grid-template-columns: 1fr !important;
-    row-gap: 16px;
+    row-gap: 14px;
   }
 
   #masthead .site-header-main-section-left,
@@ -328,15 +478,18 @@ SET post_content = CONCAT(
     justify-content: center !important;
   }
 
-  #masthead .primary-menu-container > ul.menu,
-  #masthead .header-navigation-layout-stretch-true.header-navigation-layout-fill-stretch-true .header-navigation .header-menu-container .menu {
+  #masthead .primary-menu-container > ul.menu {
     justify-content: center !important;
+  }
+
+  .fone-home-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 767px) {
   #masthead .site-main-header-wrap .site-header-row-container-inner > .site-container {
-    padding: 14px 16px !important;
+    padding: 12px 14px !important;
   }
 
   .site-branding a.brand {
@@ -345,29 +498,43 @@ SET post_content = CONCAT(
   }
 
   .site-branding a.brand img {
-    max-width: 128px !important;
+    max-width: 104px !important;
   }
 
   .site-branding .site-title {
-    font-size: 1.5rem !important;
+    font-size: 1.25rem !important;
     white-space: normal;
     text-align: center;
   }
 
+  #masthead .primary-menu-container > ul.menu {
+    gap: 6px !important;
+  }
+
   #masthead .main-navigation .menu-item > a {
-    padding: 10px 12px !important;
-    font-size: 0.93rem !important;
+    font-size: 0.86rem !important;
+    padding: 8px 10px !important;
+  }
+
+  .fone-quick-actions {
+    flex-direction: column;
+  }
+
+  .fone-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .fone-home-cards {
+    grid-template-columns: 1fr;
   }
 
   #colophon .site-top-footer-inner-wrap {
-    padding-top: 26px !important;
+    padding-top: 24px !important;
   }
 }
-/* END PORTAL1 HEADER FOOTER REFRESH */
-'
-)
+/* END PORTAL1 FINAL STANDARD CSS */'
 WHERE ID = 24
-  AND post_type = 'custom_css'
-  AND post_content NOT LIKE '%BEGIN PORTAL1 HEADER FOOTER REFRESH%';
+  AND post_type = 'custom_css';
 
 COMMIT;

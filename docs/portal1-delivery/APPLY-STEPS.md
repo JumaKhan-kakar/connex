@@ -20,13 +20,20 @@ This package updates your site end-to-end from your provided backup:
 3. Open file: `portal1-complete-website-patch.sql`.
 4. Paste all SQL and click **Go**.
 
-## 2b) Fix an already-built site header/footer only
-If the site is already running and you only want the cleaner header/footer refresh:
+## 2b) Apply the final standard site refresh
+If the site is already running and you want the quickest path to a cleaner finished site with:
+- unified header/footer styling
+- menu cleanup
+- fewer hover/visibility conflicts
+- a single CSS baseline instead of stacked overrides
+
+Use this:
 1. Open phpMyAdmin or Adminer for the active WordPress database.
 2. Open **SQL** tab.
 3. Open file: `portal1-header-footer-refresh.sql`.
 4. Paste all SQL and click **Go**.
 5. Clear cache and hard refresh the frontend.
+6. The refresh intentionally replaces old Additional CSS so stacked hover/visibility conflicts are removed.
 
 ## 2c) If you want to rebuild it the Kadence lecture-safe way
 If your teacher wants a clean Kadence-first structure with minimal custom CSS:
@@ -36,12 +43,17 @@ If your teacher wants a clean Kadence-first structure with minimal custom CSS:
 4. Follow the mobile-first checklist inside that guide for phone/tablet safety.
 5. Clean the menu structure before doing any extra styling.
 
-## 3) WordPress checks (5 minutes)
+## 3) Which route should you choose?
+
+- Choose **2b Final standard refresh** if you want the fastest practical cleanup path.
+- Choose **2c Kadence lecture-safe reset** if you want the most teacher-friendly builder-first workflow.
+
+## 4) WordPress checks (5 minutes)
 1. Open `Settings -> Permalinks` and click **Save Changes** once.
 2. Open homepage and check cards on desktop + mobile.
 3. Open all pages and confirm Spanish content is loaded.
 4. Open Rank Math snippet editor for each page and verify meta values.
 
-## 4) Optional polish
+## 5) Optional polish
 - Replace any placeholder images with your preferred visuals.
 - Regenerate cache if a cache plugin is active.

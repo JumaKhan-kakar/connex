@@ -277,17 +277,111 @@ INSERT INTO wp_postmeta (post_id, meta_key, meta_value) VALUES
 (170, '_wp_page_template', 'default'),
 (174, '_wp_page_template', 'default'),
 (178, '_wp_page_template', 'default');
-UPDATE wp_posts SET post_content = CONCAT(post_content, '
+UPDATE wp_postmeta
+SET meta_value='0'
+WHERE post_id IN (538,540)
+  AND meta_key='_menu_item_menu_item_parent';
+UPDATE wp_posts
+SET menu_order = CASE ID
+  WHEN 529 THEN 1
+  WHEN 530 THEN 2
+  WHEN 531 THEN 3
+  WHEN 532 THEN 4
+  WHEN 533 THEN 5
+  WHEN 540 THEN 6
+  WHEN 538 THEN 7
+  ELSE menu_order
+END,
+post_title = CASE ID
+  WHEN 529 THEN 'Inicio'
+  WHEN 530 THEN 'Talones'
+  WHEN 531 THEN 'Ayuda'
+  WHEN 532 THEN 'Estados'
+  WHEN 533 THEN 'FAQ'
+  WHEN 540 THEN 'Registro'
+  WHEN 538 THEN 'RFC y CURP'
+  ELSE post_title
+END,
+post_excerpt = CASE ID
+  WHEN 529 THEN 'Inicio'
+  WHEN 530 THEN 'Talones'
+  WHEN 531 THEN 'Ayuda'
+  WHEN 532 THEN 'Estados'
+  WHEN 533 THEN 'FAQ'
+  WHEN 540 THEN 'Registro'
+  WHEN 538 THEN 'RFC y CURP'
+  ELSE post_excerpt
+END,
+post_modified=NOW(),
+post_modified_gmt=UTC_TIMESTAMP()
+WHERE ID IN (529,530,531,532,533,538,540)
+  AND post_type='nav_menu_item';
+UPDATE wp_posts SET post_content='/* BEGIN PORTAL1 FINAL STANDARD CSS */
+:root {
+  --portal1-navy: #1a3b5d;
+  --portal1-navy-deep: #132c47;
+  --portal1-gold: #f4b942;
+  --portal1-gold-soft: #ffd76a;
+  --portal1-white: #ffffff;
+  --portal1-ink: #10304d;
+  --portal1-surface: rgba(255,255,255,0.08);
+  --portal1-border: rgba(255,255,255,0.16);
+  --portal1-shadow: 0 12px 28px rgba(15,44,71,0.12);
+  --portal1-shadow-strong: 0 18px 36px rgba(15,44,71,0.18);
+  --portal1-mex-green: #006847;
+  --portal1-mex-red: #ce1126;
+}
 
-/* BEGIN FONE CARD FIX */
+body,
+input,
+select,
+textarea {
+  color: var(--portal1-ink);
+  line-height: 1.6;
+}
+
 .home .entry-content,
-.home .entry-content p,
-.home .entry-content h1,
-.home .entry-content h2,
-.home .entry-content h3,
-.home .entry-content a {
+.page .entry-content,
+.single-content {
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(16px, 2vw, 24px);
+  padding-right: clamp(16px, 2vw, 24px);
+}
+
+.entry-content,
+.single-content,
+.entry-content p,
+.single-content p,
+.entry-content li,
+.single-content li,
+.entry-content h1,
+.entry-content h2,
+.entry-content h3,
+.entry-content h4,
+.single-content h1,
+.single-content h2,
+.single-content h3,
+.single-content h4 {
   overflow-wrap: anywhere;
   word-break: break-word;
+}
+
+.entry-content a:not(.wp-block-button__link),
+.single-content a:not(.wp-block-button__link) {
+  color: var(--portal1-navy) !important;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  transition: color 0.2s ease;
+}
+
+.entry-content a:not(.wp-block-button__link):hover,
+.entry-content a:not(.wp-block-button__link):focus,
+.single-content a:not(.wp-block-button__link):hover,
+.single-content a:not(.wp-block-button__link):focus {
+  color: var(--portal1-gold) !important;
 }
 
 .fone-quick-actions {
@@ -299,26 +393,27 @@ UPDATE wp_posts SET post_content = CONCAT(post_content, '
 
 .fone-btn {
   display: inline-block;
-  background: #f4b942;
-  color: #1a3b5d;
-  text-decoration: none;
+  background: var(--portal1-gold);
+  color: var(--portal1-ink) !important;
+  text-decoration: none !important;
   font-weight: 700;
   padding: 12px 18px;
-  border-radius: 10px;
-  box-shadow: 0 12px 24px rgba(26,59,93,0.14);
+  border-radius: 12px;
+  box-shadow: var(--portal1-shadow);
   transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 
 .fone-btn:hover,
 .fone-btn:focus {
+  color: var(--portal1-ink) !important;
   filter: brightness(0.98);
   transform: translateY(-1px);
-  box-shadow: 0 16px 28px rgba(26,59,93,0.18);
+  box-shadow: var(--portal1-shadow-strong);
 }
 
 .fone-btn-outline {
   background: #ffffff;
-  border: 2px solid #f4b942;
+  border: 2px solid var(--portal1-gold);
 }
 
 .fone-home-cards {
@@ -330,14 +425,14 @@ UPDATE wp_posts SET post_content = CONCAT(post_content, '
 
 .fone-card {
   border: 1px solid #d7dfeb;
-  border-radius: 14px;
+  border-radius: 16px;
   background: #ffffff;
   padding: 18px;
   display: flex;
   flex-direction: column;
   gap: 10px;
   min-width: 0;
-  box-shadow: 0 12px 24px rgba(26,59,93,0.08);
+  box-shadow: var(--portal1-shadow);
 }
 
 .fone-icon {
@@ -346,11 +441,7 @@ UPDATE wp_posts SET post_content = CONCAT(post_content, '
   text-align: center;
 }
 
-.fone-card h3 {
-  margin: 0;
-  text-align: center;
-}
-
+.fone-card h3,
 .fone-card p {
   margin: 0;
   text-align: center;
@@ -360,20 +451,6 @@ UPDATE wp_posts SET post_content = CONCAT(post_content, '
   margin-top: auto;
   text-align: center;
   font-weight: 600;
-}
-
-/* BEGIN PORTAL1 HEADER FOOTER REFRESH */
-:root {
-  --portal1-navy: #1a3b5d;
-  --portal1-navy-deep: #132c47;
-  --portal1-gold: #f4b942;
-  --portal1-gold-soft: #ffd76a;
-  --portal1-white: #ffffff;
-  --portal1-ink: #10304d;
-  --portal1-surface: rgba(255,255,255,0.08);
-  --portal1-border: rgba(255,255,255,0.16);
-  --portal1-mex-green: #006847;
-  --portal1-mex-red: #ce1126;
 }
 
 #masthead,
@@ -399,15 +476,6 @@ UPDATE wp_posts SET post_content = CONCAT(post_content, '
   top: 0;
 }
 
-#main-header {
-  display: block !important;
-  background: transparent !important;
-}
-
-#mobile-header {
-  display: none !important;
-}
-
 #masthead,
 #masthead .site-main-header-wrap .site-header-row-container-inner,
 #masthead .site-header-upper-inner-wrap,
@@ -416,13 +484,13 @@ UPDATE wp_posts SET post_content = CONCAT(post_content, '
 }
 
 #masthead .site-main-header-wrap .site-header-row-container-inner > .site-container {
-  padding: 16px 22px !important;
+  padding: 14px 20px !important;
 }
 
 #masthead .site-main-header-inner-wrap.site-header-row-center-column {
   grid-template-columns: auto minmax(0, 1fr) auto !important;
   align-items: center;
-  column-gap: 26px;
+  column-gap: 22px;
 }
 
 #masthead .site-header-main-section-center,
@@ -440,12 +508,12 @@ UPDATE wp_posts SET post_content = CONCAT(post_content, '
 }
 
 .site-branding a.brand {
-  gap: 14px !important;
+  gap: 12px !important;
   align-items: center !important;
 }
 
 .site-branding a.brand img {
-  max-width: 132px !important;
+  max-width: 112px !important;
   width: auto !important;
   height: auto !important;
   background: rgba(255,255,255,0.96);
@@ -462,7 +530,7 @@ UPDATE wp_posts SET post_content = CONCAT(post_content, '
 
 .site-branding .site-title {
   margin: 0 !important;
-  font-size: clamp(1.55rem, 1.25rem + 1vw, 2rem) !important;
+  font-size: clamp(1.35rem, 1.08rem + 0.75vw, 1.75rem) !important;
   font-weight: 700 !important;
   line-height: 1.1 !important;
   white-space: nowrap;
@@ -474,47 +542,20 @@ UPDATE wp_posts SET post_content = CONCAT(post_content, '
   gap: 2px;
 }
 
-#masthead .header-navigation-layout-stretch-true.header-navigation-layout-fill-stretch-true .header-navigation .header-menu-container .menu,
 #masthead .primary-menu-container > ul.menu {
   display: flex !important;
   justify-content: flex-end !important;
   align-items: center !important;
-  gap: 10px !important;
+  gap: 8px !important;
   flex-wrap: wrap !important;
-  grid-template-columns: none !important;
-}
-
-#masthead .primary-menu-container > ul.menu > li,
-#masthead .header-navigation-layout-stretch-true.header-navigation-layout-fill-stretch-true .header-navigation .header-menu-container .menu > li {
-  flex: 0 0 auto !important;
-  display: block !important;
-  text-align: left !important;
+  list-style: none !important;
   margin: 0 !important;
+  padding: 0 !important;
 }
 
-#masthead .main-navigation ul.sub-menu,
-#masthead .main-navigation ul.submenu {
-  display: none !important;
-  flex-direction: column !important;
-  position: absolute !important;
-  top: calc(100% + 10px) !important;
-  left: 0 !important;
-  min-width: 230px !important;
-  padding: 10px !important;
-  border-radius: 14px !important;
-  background: var(--portal1-navy-deep) !important;
-  border: 1px solid rgba(255,255,255,0.12) !important;
-  box-shadow: 0 18px 34px rgba(0,0,0,0.22) !important;
-  z-index: 999 !important;
-}
-
-#masthead .main-navigation li:hover > ul.sub-menu,
-#masthead .main-navigation li:hover > ul.submenu,
-#masthead .main-navigation li:focus-within > ul.sub-menu,
-#masthead .main-navigation li:focus-within > ul.submenu,
-#masthead .main-navigation li.menu-item--toggled-on > ul.sub-menu,
-#masthead .main-navigation li.menu-item--toggled-on > ul.submenu {
-  display: block !important;
+#masthead .primary-menu-container > ul.menu > li {
+  position: relative;
+  margin: 0 !important;
 }
 
 #masthead .main-navigation .menu-item > a {
@@ -522,11 +563,12 @@ UPDATE wp_posts SET post_content = CONCAT(post_content, '
   background: transparent !important;
   text-decoration: none !important;
   font-weight: 600 !important;
-  font-size: 0.96rem !important;
+  font-size: 0.9rem !important;
   line-height: 1.2 !important;
   letter-spacing: 0.01em;
-  padding: 11px 14px !important;
+  padding: 10px 12px !important;
   border-radius: 999px !important;
+  white-space: nowrap;
   transition: color 0.2s ease, background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease !important;
 }
 
@@ -543,8 +585,20 @@ UPDATE wp_posts SET post_content = CONCAT(post_content, '
 #masthead .main-navigation .menu-item.current_page_item > a {
   background: var(--portal1-gold) !important;
   color: var(--portal1-ink) !important;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+  box-shadow: var(--portal1-shadow);
   transform: translateY(-1px);
+}
+
+#masthead .main-navigation ul.sub-menu,
+#masthead .main-navigation ul.submenu {
+  top: 100% !important;
+  left: 0 !important;
+  min-width: 220px !important;
+  padding: 8px !important;
+  background: var(--portal1-navy-deep) !important;
+  border: 1px solid var(--portal1-border) !important;
+  border-radius: 14px !important;
+  box-shadow: var(--portal1-shadow-strong) !important;
 }
 
 #masthead .main-navigation ul.sub-menu a,
@@ -553,13 +607,14 @@ UPDATE wp_posts SET post_content = CONCAT(post_content, '
   color: var(--portal1-white) !important;
   background: transparent !important;
   border-radius: 10px !important;
-  padding: 11px 12px !important;
-  font-size: 0.92rem !important;
+  padding: 10px 12px !important;
+  font-size: 0.9rem !important;
+  white-space: normal !important;
 }
 
 #masthead .main-navigation ul.sub-menu a:hover,
 #masthead .main-navigation ul.submenu a:hover {
-  background: rgba(244,185,66,0.16) !important;
+  background: rgba(244,185,66,0.14) !important;
   color: var(--portal1-gold-soft) !important;
 }
 
@@ -574,17 +629,17 @@ UPDATE wp_posts SET post_content = CONCAT(post_content, '
 }
 
 #colophon .site-top-footer-inner-wrap {
-  padding-top: 34px !important;
-  padding-bottom: 28px !important;
-  gap: 22px !important;
+  padding-top: 30px !important;
+  padding-bottom: 24px !important;
+  gap: 18px !important;
 }
 
 #colophon .site-top-footer-inner-wrap .site-footer-section {
   background: var(--portal1-surface) !important;
   border: 1px solid var(--portal1-border) !important;
-  border-radius: 18px !important;
-  padding: 20px 18px !important;
-  box-shadow: 0 12px 28px rgba(0,0,0,0.14);
+  border-radius: 16px !important;
+  padding: 18px 16px !important;
+  box-shadow: var(--portal1-shadow);
 }
 
 #colophon .site-top-footer-inner-wrap .site-footer-section:not(:last-child)::after {
@@ -595,19 +650,15 @@ UPDATE wp_posts SET post_content = CONCAT(post_content, '
 #colophon .site-info-inner {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   height: 100%;
-}
-
-#colophon .footer-widget-area-inner > section.widget_block:last-child {
-  order: -1;
 }
 
 #colophon .wp-block-heading,
 #colophon .widget-title {
-  margin: 0 !important;
+  margin: 0 0 0.25rem !important;
   color: var(--portal1-gold) !important;
-  font-size: 1.05rem !important;
+  font-size: 1.02rem !important;
   line-height: 1.3 !important;
 }
 
@@ -641,8 +692,8 @@ UPDATE wp_posts SET post_content = CONCAT(post_content, '
 }
 
 #colophon .site-bottom-footer-inner-wrap {
-  padding-top: 18px !important;
-  padding-bottom: 22px !important;
+  padding-top: 16px !important;
+  padding-bottom: 20px !important;
 }
 
 #colophon .footer-html-inner p {
@@ -650,14 +701,25 @@ UPDATE wp_posts SET post_content = CONCAT(post_content, '
   text-align: center;
 }
 
-@media (max-width: 1024px) {
-  .fone-home-cards {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+@media (max-width: 1200px) {
+  #masthead .site-main-header-inner-wrap.site-header-row-center-column {
+    column-gap: 16px;
   }
 
+  #masthead .main-navigation .menu-item > a {
+    padding: 9px 11px !important;
+    font-size: 0.88rem !important;
+  }
+
+  .site-branding .site-title {
+    font-size: 1.3rem !important;
+  }
+}
+
+@media (max-width: 1024px) {
   #masthead .site-main-header-inner-wrap.site-header-row-center-column {
     grid-template-columns: 1fr !important;
-    row-gap: 16px;
+    row-gap: 14px;
   }
 
   #masthead .site-header-main-section-left,
@@ -668,15 +730,42 @@ UPDATE wp_posts SET post_content = CONCAT(post_content, '
     justify-content: center !important;
   }
 
-  #masthead .primary-menu-container > ul.menu,
-  #masthead .header-navigation-layout-stretch-true.header-navigation-layout-fill-stretch-true .header-navigation .header-menu-container .menu {
+  #masthead .primary-menu-container > ul.menu {
     justify-content: center !important;
+  }
+
+  .fone-home-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 767px) {
-  .fone-home-cards {
-    grid-template-columns: 1fr;
+  #masthead .site-main-header-wrap .site-header-row-container-inner > .site-container {
+    padding: 12px 14px !important;
+  }
+
+  .site-branding a.brand {
+    flex-direction: column !important;
+    text-align: center;
+  }
+
+  .site-branding a.brand img {
+    max-width: 104px !important;
+  }
+
+  .site-branding .site-title {
+    font-size: 1.25rem !important;
+    white-space: normal;
+    text-align: center;
+  }
+
+  #masthead .primary-menu-container > ul.menu {
+    gap: 6px !important;
+  }
+
+  #masthead .main-navigation .menu-item > a {
+    font-size: 0.86rem !important;
+    padding: 8px 10px !important;
   }
 
   .fone-quick-actions {
@@ -688,37 +777,15 @@ UPDATE wp_posts SET post_content = CONCAT(post_content, '
     text-align: center;
   }
 
-  #masthead .site-main-header-wrap .site-header-row-container-inner > .site-container {
-    padding: 14px 16px !important;
-  }
-
-  .site-branding a.brand {
-    flex-direction: column !important;
-    text-align: center;
-  }
-
-  .site-branding a.brand img {
-    max-width: 128px !important;
-  }
-
-  .site-branding .site-title {
-    font-size: 1.5rem !important;
-    white-space: normal;
-    text-align: center;
-  }
-
-  #masthead .main-navigation .menu-item > a {
-    padding: 10px 12px !important;
-    font-size: 0.93rem !important;
+  .fone-home-cards {
+    grid-template-columns: 1fr;
   }
 
   #colophon .site-top-footer-inner-wrap {
-    padding-top: 26px !important;
+    padding-top: 24px !important;
   }
 }
-/* END PORTAL1 HEADER FOOTER REFRESH */
-/* END FONE CARD FIX */
-') WHERE ID=24 AND post_type='custom_css' AND post_content NOT LIKE '%BEGIN FONE CARD FIX%';
+/* END PORTAL1 FINAL STANDARD CSS */' WHERE ID=24 AND post_type='custom_css';
 DELETE FROM wp_postmeta WHERE post_id IN (105,162,158,150,154,170,174,178,166) AND meta_key IN ('rank_math_title','rank_math_description','rank_math_focus_keyword');
 INSERT INTO wp_postmeta (post_id, meta_key, meta_value) VALUES (105, 'rank_math_focus_keyword', 'mi portal fone');
 INSERT INTO wp_postmeta (post_id, meta_key, meta_value) VALUES (105, 'rank_math_title', 'Mi Portal FONE: Talones SEP, Acceso y Guia Completa');
