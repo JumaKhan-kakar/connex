@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fuel Dispenser Chart Generator - Professional Edition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 1400px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 5px solid #667eea;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .control-group label {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .control-group input {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            font-family: 'Courier New', monospace;
+            transition: border-color 0.3s;
+        }
+
+        .control-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        button {
+            padding: 14px 24px;
+            font-size: 1em;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #ddd;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+            border-color: #999;
+        }
+
+        .btn-secondary:disabled {
+            background: #f5f5f5;
+            color: #ccc;
+            cursor: not-allowed;
+            border-color: #ddd;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            color: #1565c0;
+        }
+
+        .preview-container {
+            background: #f5f5f5;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            min-height: 400px;
+            overflow-x: auto;
+        }
+
+        .chart-grid {
+            background: white;
+            border-collapse: collapse;
+            font-size: 12px;
+            line-height: 1.2;
+            display: inline-block;
+        }
+
+        .chart-grid td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            min-width: 70px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .chart-grid td.rupees {
+            color: #d32f2f;
+        }
+
+        .chart-grid td.code {
+            color: #1976d2;
+        }
+
+        .chart-grid td.empty {
+            background: #f9f9f9;
+        }
+
+        .section-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .status.success {
+            background: #c8e6c9;
+            color: #2e7d32;
+            border-left: 5px solid #4caf50;
+            display: block;
+        }
+
+        .status.error {
+            background: #ffcdd2;
+            color: #c62828;
+            border-left: 5px solid #f44336;
+            display: block;
+        }
+
+        .status.info {
+            background: #bbdefb;
+            color: #1565c0;
+            border-left: 5px solid #2196f3;
+            display: block;
+        }
+
+        .download-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .download-btn {
+            background: #4caf50;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .download-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .download-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #999;
+            font-size: 0.9em;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .controls, .buttons, .info-box, .footer {
+                display: none;
+            }
+
+            .preview-container {
+                border: none;
+                padding: 0;
+                min-height: auto;
+            }
+
+            .chart-grid {
+                font-size: 10px;
+            }
+
+            .chart-grid td {
+                padding: 6px;
+                min-width: 60px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .chart-grid {
+                font-size: 10px;
+            }
+
+            .chart-grid td {
+                padding: 4px;
+                min-width: 50px;
+            }
+
+            .controls {
+                grid-template-columns: 1fr;
+            }
+
+            .buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⛽ Fuel Dispenser Chart Generator</h1>
+            <p>Professional High-Resolution Chart Generator</p>
+        </div>
+
+        <div class="info-box">
+            <strong>ℹ️ Quick Start:</strong> Enter the price per liter, click "Generate Chart", and download as PNG, CSV, or print directly.
+        </div>
+
+        <div id="status" class="status"></div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="price">Price per Liter (Rs)</label>
+                <input type="number" id="price" step="0.1" value="408.3">
+            </div>
+            <div class="control-group">
+                <label for="maxRupees">Maximum Rupees</label>
+                <input type="number" id="maxRupees" step="100" value="10000">
+            </div>
+            <div class="control-group">
+                <label for="step">Step Amount (Rs)</label>
+                <input type="number" id="step" step="10" value="50">
+            </div>
+            <div class="control-group">
+                <label for="rows">Grid Rows</label>
+                <input type="number" id="rows" min="5" max="50" value="14">
+            </div>
+            <div class="control-group">
+                <label for="cols">Grid Columns</label>
+                <input type="number" id="cols" min="10" max="100" value="40">
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button class="btn-primary" onclick="generateChart()">🔄 Generate Chart</button>
+            <button class="btn-secondary" onclick="downloadPNG()" id="btnPNG" disabled>📥 Download PNG</button>
+            <button class="btn-secondary" onclick="downloadCSV()" id="btnCSV" disabled>📥 Download CSV</button>
+            <button class="btn-secondary" onclick="downloadTXT()" id="btnTXT" disabled>📥 Download TXT</button>
+            <button class="btn-secondary" onclick="window.print()" id="btnPrint" disabled>🖨️ Print</button>
+        </div>
+
+        <div class="preview-container" id="preview">
+            <div style="text-align: center; color: #999; padding: 40px;">
+                Click "Generate Chart" to create your fuel dispenser chart
+            </div>
+        </div>
+
+        <div class="section-title">About This Tool</div>
+        <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; line-height: 1.8; color: #555;">
+            <p><strong>Unit System:</strong> 1 Liter = 10 Points = 50 Isharas (Dashes)</p>
+            <p><strong>Grid Layout:</strong> 14 rows × 40 columns, filled right-to-left (RTL) for Urdu compatibility</p>
+            <p><strong>Output Formats:</strong> PNG (high-resolution), CSV (spreadsheet), TXT (plain text), and print-ready</p>
+            <p><strong>Mobile Compatible:</strong> Works on all devices - desktop, tablet, mobile</p>
+        </div>
+
+        <div class="footer">
+            <p>Fuel Dispenser Chart Generator © 2025 | Professional Edition | No Installation Required</p>
+        </div>
+    </div>
+
+    <script>
+        let currentData = null;
+
+        class FuelDispenserChart {
+            constructor(price, maxRupees = 10000, step = 50, rows = 14, columns = 40) {
+                this.price = price;
+                this.maxRupees = maxRupees;
+                this.step = step;
+                this.rows = rows;
+                this.columns = columns;
+                this.rupees = [];
+                this.codes = [];
+                this.grid = [];
+            }
+
+            calculateCode(rupees) {
+                const totalPoints = (rupees / this.price) * 10;
+                const fullLiters = Math.floor(totalPoints / 10);
+                const remainingPoints = totalPoints - (fullLiters * 10);
+                const points = Math.floor(remainingPoints);
+                const fractionalPoint = remainingPoints - points;
+                const isharas = Math.floor(fractionalPoint * 5);
+
+                if (fullLiters === 0) {
+                    if (points === 0 && isharas === 0) {
+                        return "0";
+                    }
+                    let code = "";
+                    if (points > 0) {
+                        code = `-${points}`;
+                    }
+                    if (isharas > 0) {
+                        code += "-" + "I".repeat(isharas);
+                    }
+                    return code;
+                } else {
+                    let code = String(fullLiters);
+                    if (points > 0) {
+                        code += `-${points}`;
+                    }
+                    if (isharas > 0) {
+                        code += "-" + "I".repeat(isharas);
+                    }
+                    return code;
+                }
+            }
+
+            generateRupeeList() {
+                const rupeeSet = new Set();
+
+                // Add step amounts
+                for (let current = this.step; current <= this.maxRupees; current += this.step) {
+                    rupeeSet.add(current);
+                }
+
+                // Add exact liter prices
+                for (let n = 1; ; n++) {
+                    const exactPrice = this.price * n;
+                    if (exactPrice > this.maxRupees) break;
+                    const rounded = Math.round(exactPrice);
+                    rupeeSet.add(rounded);
+                }
+
+                return Array.from(rupeeSet).sort((a, b) => a - b);
+            }
+
+            generate() {
+                this.rupees = this.generateRupeeList();
+                this.codes = this.rupees.map(r => this.calculateCode(r));
+
+                // Create empty grid
+                this.grid = Array(this.rows).fill(null).map(() => 
+                    Array(this.columns).fill({rupees: "", code: ""})
+                );
+
+                // Fill column-major, right-to-left, top-to-bottom
+                let index = 0;
+                for (let col = this.columns - 1; col >= 0; col--) {
+                    for (let row = 0; row < this.rows; row++) {
+                        if (index < this.rupees.length) {
+                            this.grid[row][col] = {
+                                rupees: String(this.rupees[index]),
+                                code: this.codes[index]
+                            };
+                            index++;
+                        }
+                    }
+                }
+            }
+
+            getHTML() {
+                let html = '<table class="chart-grid">';
+                for (let row = 0; row < this.rows; row++) {
+                    html += '<tr>';
+                    for (let col = 0; col < this.columns; col++) {
+                        const cell = this.grid[row][col];
+                        const isEmpty = !cell.rupees;
+                        html += '<td class="' + (isEmpty ? 'empty' : 'rupees') + '">' + 
+                               (cell.rupees ? `Rs.${cell.rupees}` : '') +
+                               '</td>';
+                    }
+                    html += '</tr>';
+                }
+                html += '</table>';
+                html += '<br><br>';
+                html += '<table class="chart-grid">';
+                for (let row = 0; row < this.rows; row++) {
+                    html += '<tr>';
+                    for (let col = 0; col < this.columns; col++) {
+                        const cell = this.grid[row][col];
+                        const isEmpty = !cell.code;
+                        html += '<td class="' + (isEmpty ? 'empty' : 'code') + '">' + 
+                               (cell.code ? cell.code : '') +
+                               '</td>';
+                    }
+                    html += '</tr>';
+                }
+                html += '</table>';
+                return html;
+            }
+
+            getCSV() {
+                let csv = "";
+                // Rupees grid
+                for (let row = 0; row < this.rows; row++) {
+                    for (let col = 0; col < this.columns; col++) {
+                        if (col > 0) csv += ",";
+                        csv += this.grid[row][col].rupees;
+                    }
+                    csv += "\n";
+                }
+                csv += "\n";
+                // Codes grid
+                for (let row = 0; row < this.rows; row++) {
+                    for (let col = 0; col < this.columns; col++) {
+                        if (col > 0) csv += ",";
+                        csv += this.grid[row][col].code;
+                    }
+                    csv += "\n";
+                }
+                return csv;
+            }
+
+            async getImageData() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                const dpi = 300;
+                const scale = 3;
+                const cellWidth = 160;
+                const cellHeight = 80;
+                const border = 40;
+                
+                canvas.width = (this.columns * cellWidth + border * 2) * scale;
+                canvas.height = (this.rows * cellHeight + border * 2 + 100) * scale;
+                
+                // Scale for high DPI
+                ctx.scale(scale, scale);
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width / scale, canvas.height / scale);
+                
+                // Draw title
+                ctx.fillStyle = 'black';
+                ctx.font = 'bold 48px "Courier New"';
+                const title = `Fuel Dispenser Chart - Rs. ${this.price.toFixed(1)}/Liter`;
+                const metrics = ctx.measureText(title);
+                const titleX = (canvas.width / scale - metrics.width) / 2;
+                ctx.fillText(title, titleX, 60);
+                
+                // Draw grid
+                const startY = 100;
+                ctx.font = '38px "Courier New"';
+                ctx.strokeStyle = 'black';
+                ctx.lineWidth = 2;
+                
+                // Draw cells
+                for (let row = 0; row < this.rows; row++) {
+                    for (let col = 0; col < this.columns; col++) {
+                        const x = border + col * cellWidth;
+                        const y = startY + row * cellHeight;
+                        
+                        // Draw cell border
+                        ctx.strokeRect(x, y, cellWidth, cellHeight);
+                        
+                        // Draw content
+                        const cell = this.grid[row][col];
+                        if (cell.rupees) {
+                            ctx.fillStyle = '#d32f2f';
+                            const rupeeText = `Rs.${cell.rupees}`;
+                            const rupeeMetrics = ctx.measureText(rupeeText);
+                            ctx.fillText(rupeeText, x + (cellWidth - rupeeMetrics.width) / 2, y + 35);
+                            
+                            // Separator
+                            ctx.strokeStyle = '#ccc';
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(x + 5, y + cellHeight / 2);
+                            ctx.lineTo(x + cellWidth - 5, y + cellHeight / 2);
+                            ctx.stroke();
+                            
+                            // Code
+                            ctx.fillStyle = '#1976d2';
+                            ctx.font = '36px "Courier New"';
+                            const codeMetrics = ctx.measureText(cell.code);
+                            ctx.fillText(cell.code, x + (cellWidth - codeMetrics.width) / 2, y + cellHeight - 10);
+                            
+                            ctx.strokeStyle = 'black';
+                            ctx.lineWidth = 2;
+                        }
+                    }
+                }
+                
+                // Draw grid lines
+                ctx.strokeStyle = 'black';
+                ctx.lineWidth = 2;
+                for (let col = 0; col <= this.columns; col++) {
+                    const x = border + col * cellWidth;
+                    ctx.beginPath();
+                    ctx.moveTo(x, startY);
+                    ctx.lineTo(x, startY + this.rows * cellHeight);
+                    ctx.stroke();
+                }
+                
+                for (let row = 0; row <= this.rows; row++) {
+                    const y = startY + row * cellHeight;
+                    ctx.beginPath();
+                    ctx.moveTo(border, y);
+                    ctx.lineTo(border + this.columns * cellWidth, y);
+                    ctx.stroke();
+                }
+                
+                return canvas.toDataURL('image/png');
+            }
+        }
+
+        function showStatus(message, type = 'info') {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            setTimeout(() => {
+                status.className = 'status';
+            }, 5000);
+        }
+
+        function generateChart() {
+            try {
+                const price = parseFloat(document.getElementById('price').value);
+                const maxRupees = parseInt(document.getElementById('maxRupees').value);
+                const step = parseInt(document.getElementById('step').value);
+                const rows = parseInt(document.getElementById('rows').value);
+                const cols = parseInt(document.getElementById('cols').value);
+
+                if (price <= 0 || maxRupees <= 0 || step <= 0) {
+                    showStatus('❌ Please enter valid positive numbers', 'error');
+                    return;
+                }
+
+                showStatus('⏳ Generating chart...', 'info');
+
+                currentData = new FuelDispenserChart(price, maxRupees, step, rows, cols);
+                currentData.generate();
+
+                const preview = document.getElementById('preview');
+                preview.innerHTML = currentData.getHTML();
+
+                document.getElementById('btnPNG').disabled = false;
+                document.getElementById('btnCSV').disabled = false;
+                document.getElementById('btnTXT').disabled = false;
+                document.getElementById('btnPrint').disabled = false;
+
+                showStatus(`✅ Chart generated successfully! (${currentData.rupees.length} values)`, 'success');
+            } catch (error) {
+                showStatus(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        function downloadPNG() {
+            if (!currentData) return;
+            
+            showStatus('⏳ Generating PNG image...', 'info');
+            
+            currentData.getImageData().then(imageData => {
+                const link = document.createElement('a');
+                link.href = imageData;
+                link.download = `fuel-dispenser-chart-${currentData.price}.png`;
+                link.click();
+                showStatus('✅ PNG downloaded successfully!', 'success');
+            }).catch(error => {
+                showStatus(`❌ Error generating image: ${error.message}`, 'error');
+            });
+        }
+
+        function downloadCSV() {
+            if (!currentData) return;
+
+            const csv = currentData.getCSV();
+            const blob = new Blob([csv], {type: 'text/csv'});
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `fuel-dispenser-chart-${currentData.price}.csv`;
+            link.click();
+            showStatus('✅ CSV downloaded successfully!', 'success');
+        }
+
+        function downloadTXT() {
+            if (!currentData) return;
+
+            let txt = `Fuel Dispenser Chart - Rs. ${currentData.price.toFixed(1)}/Liter\n`;
+            txt += `${'='.repeat(280)}\n\n`;
+            txt += 'RUPEES GRID:\n';
+            txt += `${'-'.repeat(280)}\n`;
+            for (let row = 0; row < currentData.rows; row++) {
+                for (let col = 0; col < currentData.columns; col++) {
+                    txt += currentData.grid[row][col].rupees.toString().padEnd(8);
+                }
+                txt += '\n';
+            }
+            txt += '\n\nCODES GRID:\n';
+            txt += `${'-'.repeat(280)}\n`;
+            for (let row = 0; row < currentData.rows; row++) {
+                for (let col = 0; col < currentData.columns; col++) {
+                    txt += currentData.grid[row][col].code.padEnd(8);
+                }
+                txt += '\n';
+            }
+
+            const blob = new Blob([txt], {type: 'text/plain'});
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `fuel-dispenser-chart-${currentData.price}.txt`;
+            link.click();
+            showStatus('✅ TXT downloaded successfully!', 'success');
+        }
+
+        // Auto-generate chart on page load
+        window.addEventListener('load', () => {
+            generateChart();
+        });
+    </script>
+</body>
+</html>
